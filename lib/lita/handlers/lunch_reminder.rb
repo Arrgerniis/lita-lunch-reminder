@@ -195,16 +195,11 @@ module Lita
       end
 
       def pick_winners
-        if current_lunchers_list.include? 'ignacio'
-          (current_lunchers_list - ['ignacio']).sample(ENV['MAX_LUNCHERS'].to_i - 1).each do |winner|
-            add_to_winning_lunchers winner
-          end
-          add_to_winning_lunchers 'ignacio'
-        else
-          current_lunchers_list.sample(ENV['MAX_LUNCHERS'].to_i).each do |winner|
-            add_to_winning_lunchers winner
-          end
+        ensure_win = current_lunchers_list & ['ignacio', 'agustin']
+        (current_lunchers_list - ensure_win).sample(ENV['MAX_LUNCHERS'].to_i - ensure_win.length).each do |winner|
+          add_to_winning_lunchers winner
         end
+        ensure_win.each { |w| add_to_winning_lunchers w }
       end
 
       def already_assigned?
